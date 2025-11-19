@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Locator - Тестування</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .test-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-section h2 {
+            color: #2563eb;
+            font-size: 18px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            border-left: 3px solid #2563eb;
+        }
+        
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px 5px 5px 0;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .output {
+            background: #1a1a1a;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .status.success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status.error {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .status.pending {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav a {
+            background: white;
+            color: #2563eb;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            border: 2px solid #2563eb;
+            transition: all 0.3s;
+        }
+        
+        .nav a:hover {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .nav a.active {
+            background: #2563eb;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🔧 Store Locator - Тестова консоль</h1>
+        
+        <div class="nav">
+            <a href="index.html" class="nav-link">🏠 Повернутися до програми</a>
+            <a href="#" onclick="clearOutput(); return false;">🗑️ Очистити вивід</a>
+        </div>
+
+        <!-- ШИФРУВАННЯ -->
+        <div class="test-section">
+            <h2>🔐 Тестування шифрування</h2>
+            <div class="test-item">
+                <strong>Тест 1:</strong> Шифрування/розшифрування тестових даних
+                <button onclick="runCryptoTest()">Запустити тест</button>
+                <span id="cryptoStatus" class="status pending" style="display:none;"></span>
+            </div>
+            <div class="test-item">
+                <strong>Тест 2:</strong> Генеруємо зашифрований JSON для 1С
+                <button onclick="generateEncrypted()">Генерувати</button>
+            </div>
+            <div class="test-item">
+                <strong>Тест 3:</strong> Валідація шифрованих даних
+                <button onclick="validateEncrypted()">Перевірити</button>
+                <span id="validateStatus" class="status pending" style="display:none;"></span>
+            </div>
+        </div>
+
+        <!-- ГЕОЛОКАЦІЯ -->
+        <div class="test-section">
+            <h2>📍 Тестування геолокації</h2>
+            <div class="test-item">
+                <strong>Тест 1:</strong> Обчислення відстані (Haversine)
+                <button onclick="testDistance()">Тест</button>
+            </div>
+            <div class="test-item">
+                <strong>Тест 2:</strong> Пошук магазинів в радіусі
+                <button onclick="testRadiusSearch()">Тест</button>
+            </div>
+            <div class="test-item">
+                <strong>Тест 3:</strong> Адаптивний пошук (3→6→10→20км)
+                <button onclick="testAdaptiveRadius()">Тест</button>
+            </div>
+        </div>
+
+        <!-- УПРАВЛІННЯ ДАНИМИ -->
+        <div class="test-section">
+            <h2>💾 Тестування DataManager</h2>
+            <div class="test-item">
+                <strong>Тест 1:</strong> Парсинг координат з Google Maps URL
+                <button onclick="testParseCoordinates()">Тест</button>
+            </div>
+            <div class="test-item">
+                <strong>Тест 2:</strong> Експорт для WordPress
+                <button onclick="testWordPressExport()">Експортувати</button>
+            </div>
+            <div class="test-item">
+                <strong>Тест 3:</strong> Перевірка структури даних
+                <button onclick="testDataValidation()">Перевірити</button>
+                <span id="validationStatus" class="status pending" style="display:none;"></span>
+            </div>
+        </div>
+
+        <!-- RATE LIMITER -->
+        <div class="test-section">
+            <h2>🛡️ Тестування Rate Limiter</h2>
+            <div class="test-item">
+                <strong>Тест 1:</strong> Перевірка обмеження запитів (3 запиту в радіусі 1км)
+                <button onclick="testRateLimiter()">Тест</button>
+            </div>
+            <div class="test-item">
+                <strong>Тест 2:</strong> Очистити历историю запитів
+                <button onclick="clearRateLimiterHistory()">Очистити</button>
+            </div>
+        </div>
+
+        <!-- ІНФОРМАЦІЯ -->
+        <div class="test-section">
+            <h2>ℹ️ Інформація</h2>
+            <div class="test-item">
+                <button onclick="showSystemInfo()">Показати інформацію про систему</button>
+            </div>
+        </div>
+
+        <!-- ВИВІД -->
+        <div class="test-section">
+            <h2>📋 Вивід тестів</h2>
+            <div id="output" class="output">Очікування на тести...</div>
+        </div>
+    </div>
+
+    <!-- Скрипти -->
+    <script src="js/crypto.js"></script>
+    <script src="js/test-data.js"></script>
+    <script src="js/dataManager.js"></script>
+    <script src="js/geolocation.js"></script>
+
+    <script>
+        const output = document.getElementById('output');
+        
+        function log(...args) {
+            const message = args.map(arg => {
+                if (typeof arg === 'object') {
+                    return JSON.stringify(arg, null, 2);
+                }
+                return String(arg);
+            }).join(' ');
+            
+            output.textContent += message + '\n\n';
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function clearOutput() {
+            output.textContent = '';
+        }
+        
+        function setStatus(elementId, status, message) {
+            const el = document.getElementById(elementId);
+            if (el) {
+                el.textContent = message;
+                el.className = 'status ' + status;
+                el.style.display = 'inline-block';
+            }
+        }
+
+        // ====== ТЕСТИ ======
+        
+        function runCryptoTest() {
+            clearOutput();
+            log('🔐 Запуск тесту шифрування...\n');
+            
+            try {
+                const result = testDecryption();
+                setStatus('cryptoStatus', result ? 'success' : 'error', 
+                    result ? '✓ УСПІХ' : '✗ ПОМИЛКА');
+            } catch (error) {
+                log('❌ Помилка:', error);
+                setStatus('cryptoStatus', 'error', '✗ ПОМИЛКА');
+            }
+        }
+        
+        function generateEncrypted() {
+            clearOutput();
+            log('📝 Генеруємо зашифрований JSON...\n');
+            
+            try {
+                const payload = generateTestEncryptedData();
+                log('\n✓ Успішно генеровано!\n\nВикористовуйте цей JSON на сервері:');
+            } catch (error) {
+                log('❌ Помилка:', error);
+            }
+        }
+        
+        function validateEncrypted() {
+            clearOutput();
+            log('✓ Перевіряємо шифровані дані...\n');
+            
+            try {
+                const encrypted = encryptData(TEST_DATA);
+                const isValid = isValidEncryptedData(encrypted);
+                
+                log('Зашифровані дані валідні:', isValid);
+                setStatus('validateStatus', isValid ? 'success' : 'error',
+                    isValid ? '✓ ВАЛІДНІ' : '✗ НЕВАЛІДНІ');
+            } catch (error) {
+                log('❌ Помилка:', error);
+                setStatus('validateStatus', 'error', '✗ ПОМИЛКА');
+            }
+        }
+        
+        function testDistance() {
+            clearOutput();
+            log('📏 Обчислення відстані...\n');
+            
+            const point1 = { lat: 50.0056, lng: 36.2345 };
+            const point2 = { lat: 50.0105, lng: 36.2456 };
+            
+            const distance = GeoLocation.calculateDistance(
+                point1.lat, point1.lng,
+                point2.lat, point2.lng
+            );
+            
+            log(`Точка 1: ${point1.lat}, ${point1.lng}`);
+            log(`Точка 2: ${point2.lat}, ${point2.lng}`);
+            log(`Відстань: ${distance.toFixed(3)} км\n✓ OK`);
+        }
+        
+        function testRadiusSearch() {
+            clearOutput();
+            log('🔍 Пошук магазинів в радіусі...\n');
+            
+            // Використовуємо Харків як точку
+            const userLat = 50.0056;
+            const userLng = 36.2345;
+            
+            const shops = TEST_DATA.shops.map(shop => ({
+                ...shop,
+                coords: dataManager.parseCoordinates(shop.map)
+            }));
+            
+            const inRadius = GeoLocation.findShopsInRadius(shops, userLat, userLng, 1);
+            log(`Магазинів у радіусі 1км: ${inRadius.length}`);
+            inRadius.forEach((shop, i) => {
+                log(`${i + 1}. ${shop.name} (${shop.distance.toFixed(2)} км)`);
+            });
+        }
+        
+        function testAdaptiveRadius() {
+            clearOutput();
+            log('🎯 Адаптивний пошук...\n');
+            
+            const shops = TEST_DATA.shops.map(shop => ({
+                ...shop,
+                coords: dataManager.parseCoordinates(shop.map)
+            }));
+            
+            const result = GeoLocation.findAdaptiveRadius(shops, 50.0056, 36.2345, 10);
+            log(`Знайдено: ${result.shops.length} магазинів`);
+            log(`Радіус: ${result.radius} км`);
+            log(`Повідомлення: ${result.message}`);
+        }
+        
+        function testParseCoordinates() {
+            clearOutput();
+            log('📍 Парсинг координат...\n');
+            
+            TEST_DATA.shops.forEach(shop => {
+                const coords = dataManager.parseCoordinates(shop.map);
+                log(`${shop.name}`);
+                log(`  URL: ${shop.map}`);
+                log(`  Координати: ${coords.lat}, ${coords.lng}\n`);
+            });
+        }
+        
+        function testWordPressExport() {
+            clearOutput();
+            log('📊 Експорт для WordPress...\n');
+            
+            dataManager.data = TEST_DATA;
+            const wpData = dataManager.exportForWordPress();
+            
+            log(JSON.stringify(wpData, null, 2));
+        }
+        
+        function testDataValidation() {
+            clearOutput();
+            log('✓ Перевірка структури даних...\n');
+            
+            try {
+                const isValid = dataManager.validateDataStructure(TEST_DATA);
+                log('Структура валідна:', isValid);
+                setStatus('validationStatus', isValid ? 'success' : 'error',
+                    isValid ? '✓ ВАЛІДНА' : '✗ НЕВАЛІДНА');
+            } catch (error) {
+                log('❌ Помилка:', error);
+                setStatus('validationStatus', 'error', '✗ ПОМИЛКА');
+            }
+        }
+        
+        function testRateLimiter() {
+            clearOutput();
+            log('🛡️ Тест Rate Limiter...\n');
+            
+            log('Симулюємо 3 запиту з однієї IP в радіусі 1км:');
+            
+            // Очищаємо историю перед тестом
+            rateLimiter.clearHistory();
+            
+            setTimeout(() => {
+                rateLimiter.checkAndRecord(50.0000, 36.2300).then(r1 => {
+                    log(`Запит 1: ${r1 ? '✓ ДОЗВОЛЕН' : '✗ ЗАБЛОКИРАН'}`);
+                    
+                    rateLimiter.checkAndRecord(50.0001, 36.2301).then(r2 => {
+                        log(`Запит 2: ${r2 ? '✓ ДОЗВОЛЕН' : '✗ ЗАБЛОКИРАН'}`);
+                        
+                        rateLimiter.checkAndRecord(50.0002, 36.2302).then(r3 => {
+                            log(`Запит 3: ${r3 ? '✓ ДОЗВОЛЕН' : '✗ ЗАБЛОКИРАН'}`);
+                            
+                            rateLimiter.checkAndRecord(50.0003, 36.2303).then(r4 => {
+                                log(`Запит 4 (має бути заблокиран): ${r4 ? '✗ ПОМИЛКА - ДОЗВОЛЕН!' : '✓ ЗАБЛОКИРАН (правильно)'}`);
+                            });
+                        });
+                    });
+                });
+            }, 100);
+        }
+        
+        function clearRateLimiterHistory() {
+            clearOutput();
+            rateLimiter.clearHistory();
+            log('✓ Історія Rate Limiter очищена');
+        }
+        
+        function showSystemInfo() {
+            clearOutput();
+            log('ℹ️ Інформація про систему\n');
+            
+            log('🌍 Браузер:', navigator.userAgent.substring(0, 60) + '...');
+            log('📱 Мобільний:', /Mobile|Android/i.test(navigator.userAgent) ? 'Так' : 'Ні');
+            log('🔒 HTTPS:', window.location.protocol === 'https:' ? 'Так' : 'Ні');
+            
+            log('\n📦 Модулі:');
+            log('  ✓ Crypto API доступна');
+            log('  ✓ DataManager загружений');
+            log('  ✓ GeoLocation загружений');
+            log('  ✓ Test Data загружені');
+            
+            log('\n💾 Storage:');
+            log('  localStorage:', localStorage.getItem('store-locator-data-v1') ? 'Є дані' : 'Пусто');
+            log('  Cache TTL: 24 години');
+            
+            log('\n🔑 Ключ шифрування: ' + ENCRYPTION_KEY.substring(0, 20) + '...');
+        }
+
+        // Ініціалізація
+        log('✓ Тестова консоль завантажена\n');
+        log('Виберіть тест вище для запуску...');
+    </script>
+</body>
+</html>

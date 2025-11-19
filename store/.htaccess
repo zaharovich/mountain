@@ -1,0 +1,30 @@
+# Увімкнути стиснення для швидшої загрузки
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Кешування статичних файлів
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+</IfModule>
+
+# Безпека
+<IfModule mod_headers.c>
+    # Дозволяємо iframe тільки з того ж домену
+    Header set X-Frame-Options "SAMEORIGIN"
+    
+    # Захист від XSS
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Не давати браузеру "вгадувати" тип контенту
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+# Помилки PHP (якщо є)
+php_flag display_errors Off
+php_flag log_errors On
+

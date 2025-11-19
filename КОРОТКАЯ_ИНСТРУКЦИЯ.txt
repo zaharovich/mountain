@@ -1,0 +1,67 @@
+═══════════════════════════════════════════════════════════════
+🚂 RAILWAY.APP - ШВИДКИЙ ДЕПЛОЙ (5 хвилин)
+═══════════════════════════════════════════════════════════════
+
+ПРОБЛЕМА:
+1С не може HTTPS, Cloudflare Workers блокує IP.
+
+РІШЕННЯ:
+Задеплоїти свій server.js на Railway.app (безкоштовно + HTTPS).
+
+═══════════════════════════════════════════════════════════════
+
+🔥 ЩО РОБИТИ:
+
+1️⃣ РЕЄСТРАЦІЯ
+   → Зайди на https://railway.app/
+   → Login через GitHub
+
+2️⃣ НОВИЙ ПРОЕКТ
+   → Натисни "New Project"
+   → Вибери "Deploy from GitHub repo"
+
+3️⃣ ЗАВАНТАЖ КОД НА GITHUB
+   Відкрий термінал:
+   
+   cd /Users/zaharbelousenko/Downloads/store-loc-clear
+   git init
+   git add .
+   git commit -m "Store Locator API"
+   
+   Створи репозиторій на GitHub (можна приватний)
+   Назва: store-locator-api
+   
+   git remote add origin https://github.com/ТВІЙ-USERNAME/store-locator-api.git
+   git branch -M main
+   git push -u origin main
+
+4️⃣ ДЕПЛОЙ НА RAILWAY
+   → На Railway вибери свій репозиторій
+   → Railway автоматично задеплоїть!
+
+5️⃣ ОТРИМАЙ URL
+   → Settings → Domains → Generate Domain
+   → Отримаєш: https://назва.up.railway.app
+
+═══════════════════════════════════════════════════════════════
+
+✅ ФІНАЛЬНИЙ КРОК:
+
+Пришли мені свій Railway URL типу:
+https://store-locator-api-production.up.railway.app
+
+Я оновлю dataManager.js і все запрацює!
+
+═══════════════════════════════════════════════════════════════
+
+💰 БЕЗКОШТОВНО:
+- 500 годин/місяць
+- HTTPS автоматично
+- Працює 24/7
+
+═══════════════════════════════════════════════════════════════
+
+📝 ДЕТАЛЬНА ІНСТРУКЦІЯ: ДЕПЛОЙ_НА_RAILWAY.md
+
+═══════════════════════════════════════════════════════════════
+
