@@ -1,5 +1,3 @@
-// Робота з картою Leaflet
-
 class MapService {
     constructor() {
         this.map = null;
@@ -9,10 +7,7 @@ class MapService {
         this.shops = [];
     }
 
-    // Ініціалізація карти
     init(latitude, longitude) {
-        log('Ініціалізація карти для', latitude, longitude);
-
         if (this.map) {
             this.map.remove();
             this.map = null;
@@ -20,18 +15,15 @@ class MapService {
 
         this.map = L.map('map').setView([latitude, longitude], 13);
 
-        // Додаємо OpenStreetMap тайли
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
             maxZoom: 19
         }).addTo(this.map);
 
-        // Позначаємо поточну локацію
         this.addCurrentLocationMarker(latitude, longitude);
         this.currentLocation = { latitude, longitude };
     }
 
-    // Додавання маркера поточної локації користувача
     addCurrentLocationMarker(latitude, longitude) {
         const marker = L.circleMarker([latitude, longitude], {
             radius: 8,
@@ -46,9 +38,7 @@ class MapService {
         return marker;
     }
 
-    // Додавання маркерів магазинів
     addShopMarkers(shops) {
-        // Очищаємо старі маркери
         this.markers.forEach(marker => {
             this.map.removeLayer(marker);
         });
@@ -66,7 +56,6 @@ class MapService {
                 }
             ).addTo(this.map);
 
-            // Обработка кліку на маркер
             marker.on('click', () => {
                 this.onShopMarkerClick(shop);
             });
@@ -75,18 +64,13 @@ class MapService {
             this.markers.push(marker);
         });
 
-        log(`Додано ${this.markers.length} маркерів`);
-
-        // Автоматично масштабуємо карту для того щоб всі маркери були видні
         if (this.markers.length > 0) {
             const group = new L.featureGroup(this.markers);
             this.map.fitBounds(group.getBounds().pad(0.1));
         }
     }
 
-    // Отримання іконки для магазину
     getShopIcon(shop) {
-        // Вибираємо кольор за першим продуктом
         let color = '#3b82f6';
         if (shop.products && shop.products.length > 0) {
             color = Utils.getCategoryColor(shop.products[0].id);
@@ -103,22 +87,25 @@ class MapService {
             iconAnchor: [20, 40]
         });
     }
-
-    // Обработка кліку на маркер магазину
+//Fix
     onShopMarkerClick(shop) {
+        if (shop.coordinates) {
+            this.map.panTo([shop.coordinates.latitude, shop.coordinates.longitude], {
+                animate: true,
+                duration: 0.5
+            });
+        }
         this.showShopPopup(shop);
+        console.log("onShopMarketClick")
     }
-
-    // Показання попапу магазину
+    
     showShopPopup(shop) {
         const popup = document.getElementById('shopPopup');
         const shopNameEl = document.getElementById('shopName');
         const shopProductsEl = document.getElementById('shopProducts');
 
-        // Назва магазину
         shopNameEl.textContent = shop.name;
 
-        // Продукти
         if (!shop.products || shop.products.length === 0) {
             shopProductsEl.innerHTML = '<p style="color: #999;">Нема товарів</p>';
         } else {
@@ -140,7 +127,6 @@ class MapService {
         popup.style.display = 'flex';
     }
 
-    // Очищення карти
     clear() {
         this.markers.forEach(marker => {
             this.map.removeLayer(marker);
@@ -150,10 +136,8 @@ class MapService {
     }
 }
 
-// Глобальний екземпляр
 const mapService = new MapService();
 
-// CSS для маркерів
 const style = document.createElement('style');
 style.textContent = `
     .shop-marker-icon {

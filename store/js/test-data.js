@@ -1,8 +1,3 @@
-/**
- * Тестовые данные для разработки
- * Используйте это для локального тестирования ДО подключения 1С сервера
- */
-
 const TEST_DATA = {
     cities: [
         { name: "Харків", id: "1" },
@@ -73,10 +68,6 @@ const TEST_DATA = {
     ]
 };
 
-/**
- * Функция для шифрования тестовых данных
- * Используйте это для генерации тестового зашифрованного JSON
- */
 function generateTestEncryptedData() {
     const encrypted = encryptData(TEST_DATA);
     const payload = {
@@ -84,39 +75,15 @@ function generateTestEncryptedData() {
         timestamp: new Date().toISOString()
     };
     
-    console.log('Тестовый зашифрованный JSON для использования на сервере:');
-    console.log(JSON.stringify(payload, null, 2));
-    
     return payload;
 }
 
-/**
- * Для тестирования НУЖНО:
- * 1. Откомментировать следующие строки в index.html после crypto.js:
- *    <script src="js/test-data.js"></script>
- * 
- * 2. В консоли браузера запустить:
- *    generateTestEncryptedData()
- * 
- * 3. Скопировать результат и использовать как mock сервера
- */
-
-// Для автоматического тестирования расшифровки:
 function testDecryption() {
-    console.log('[Test] Тестирование шифрования/расшифровки...');
-    
     const encrypted = encryptData(TEST_DATA);
-    console.log('[Test] Зашифрованные данные:', encrypted);
     
     const decrypted = decryptData(encrypted);
-    console.log('[Test] Расшифрованные данные:', decrypted);
     
     const match = JSON.stringify(decrypted) === JSON.stringify(TEST_DATA);
-    console.log('[Test] ✓ Данные совпадают:', match);
     
     return match;
 }
-
-// Запустить тест при загрузке
-console.log('%c[TEST DATA] Модуль тестовых данных загружен', 'color: green; font-weight: bold');
-console.log('Доступные функции: generateTestEncryptedData(), testDecryption()');

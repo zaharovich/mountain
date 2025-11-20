@@ -1,9 +1,6 @@
-// Утіліти для роботи з координатами, датами тощо
-
 class Utils {
-    // Розрахунок відстані між двома точками (Формула Гаверсина)
     static getDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371; // Радіус Землі в км
+        const R = 6371;
         const dLat = (lat2 - lat1) * Math.PI / 180;
         const dLon = (lon2 - lon1) * Math.PI / 180;
         const a = 
@@ -14,7 +11,6 @@ class Utils {
         return R * c;
     }
 
-    // Отримання магазинів в радіусі
     static getShopsInRadius(shops, latitude, longitude, radiusKm) {
         return shops.filter(shop => {
             if (!shop.coordinates) return false;
@@ -42,7 +38,6 @@ class Utils {
         });
     }
 
-    // Перевірка, чи продукт "свіжий" (менше 2х тижнів)
     static isProductFresh(timestamp) {
         const productDate = new Date(timestamp);
         const twoWeeksAgo = new Date();
@@ -50,7 +45,6 @@ class Utils {
         return productDate >= twoWeeksAgo;
     }
 
-    // Перевірка, чи продукт показуємо (менше 2х місяців)
     static shouldShowProduct(timestamp) {
         const productDate = new Date(timestamp);
         const twoMonthsAgo = new Date();
@@ -58,31 +52,21 @@ class Utils {
         return productDate >= twoMonthsAgo;
     }
 
-    // Форматування дати
     static formatDate(dateString) {
         const date = new Date(dateString);
         return date.toLocaleDateString('uk-UA');
     }
 
-    // Отримання IP адреси (для симуляції на фронтенді)
     static getClientIP() {
-        // Це буде на бекенді, тут для демо
         return 'client-ip';
     }
 
-    // Перевірка, чи локація в межах 1км від інших
     static isWithinRadius(lat1, lon1, lat2, lon2, radiusKm = 1) {
         return this.getDistance(lat1, lon1, lat2, lon2) <= radiusKm;
     }
 
-    // Парсування координат з Google Maps URL
     static parseGoogleMapsCoordinates(url) {
         if (!url) return null;
-
-        // Формати:
-        // https://maps.google.com/maps?q=50.123,30.456
-        // https://www.google.com/maps/place/50.123,30.456
-        // https://maps.google.com/?q=location@50.123,30.456
 
         const patterns = [
             /@(-?\d+\.?\d*),(-?\d+\.?\d*)/,
@@ -103,7 +87,6 @@ class Utils {
         return null;
     }
 
-    // Генерація SVG іконки для продукту
     static generateProductIcon(color = '#3b82f6') {
         const svg = `
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
@@ -115,7 +98,6 @@ class Utils {
         return 'data:image/svg+xml;base64,' + btoa(svg);
     }
 
-    // Генерація кольору за категорією
     static getCategoryColor(productId) {
         const colors = [
             '#3b82f6', '#ef4444', '#10b981', '#f59e0b',
@@ -126,7 +108,6 @@ class Utils {
         return colors[hash];
     }
 
-    // Оформлення числа як локальної валюти
     static formatCurrency(amount, currency = 'UAH') {
         return new Intl.NumberFormat('uk-UA', {
             style: 'currency',
@@ -134,17 +115,14 @@ class Utils {
         }).format(amount);
     }
 
-    // Затримка (для асинхрона)
     static delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // Глубока копія об'єкта
     static deepClone(obj) {
         return JSON.parse(JSON.stringify(obj));
     }
 
-    // Local Storage з TTL
     static setWithTTL(key, value, ttl) {
         const now = new Date();
         const item = {
@@ -168,7 +146,6 @@ class Utils {
         return item.value;
     }
 
-    // Показання повідомлення
     static showMessage(text, type = 'success', duration = 3000) {
         const messageEl = document.getElementById('message');
         messageEl.textContent = text;

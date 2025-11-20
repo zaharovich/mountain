@@ -5,29 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store Locator - Карта магазинів</title>
     
-    <!-- Leaflet CSS -->
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
-    <!-- Select2 CSS -->
+    
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     
-    <!-- Custom CSS -->
+    
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <div class="app">
-        <!-- ===== БЛОК ЗАПРОСА ГЕОЛОКАЦИИ ===== -->
+        
         <div class="location-request" id="locationRequest">
             <div class="location-request__overlay"></div>
             <div class="location-request__modal">
                 <h1 class="location-request__title">Знайти найближчий магазин</h1>
-                <p class="location-request__description">Дозвольте доступ до вашої локації, щоб ми показали вам ближайшие магазины</p>
+                <p class="location-request__description">Дозвольте доступ до вашої локації, щоб ми показали вам найближчi магазини</p>
                 
                 <button class="location-request__button location-request__button--primary" id="allowLocationBtn">
                     Дозволити доступ до локації
                 </button>
                 
-                <!-- Інструкції для десктопу (приховані за замовчуванням) -->
+                
                 <div class="location-request__instructions" id="instructions" style="display:none;">
                     <h2 class="location-request__instructions-title">Як дозволити доступ до локації?</h2>
                     
@@ -61,23 +61,23 @@
             </div>
         </div>
 
-        <!-- ===== ОСНОВНИЙ КОНТЕНТ З КАРТОЮ ===== -->
+        
         <div class="map-container" id="mapContainer" style="display:none;">
-            <!-- Заголовок НАД картою -->
+            
             <div class="map-header">
                 <h1 class="map-header__title">Наші магазини на мапі</h1>
             </div>
 
-            <!-- Карта Leaflet з фільтром -->
+            
             <div class="map-wrapper">
-                <!-- Dropdown фільтр поверх карти -->
+                
                 <div class="category-dropdown">
                     <select class="category-dropdown__select" id="categoryFilter">
-                        <!-- Опції будуть згенеровані JavaScript -->
+                        
                     </select>
                 </div>
 
-                <!-- Поле для тестування координат поверх карти -->
+                
                 <div class="test-coordinates">
                     <input 
                         type="text" 
@@ -88,14 +88,27 @@
                     <button id="applyCoordinatesBtn" class="test-coordinates__button">Застосувати тестові координати</button>
                 </div>
 
-                <!-- Кнопка расширенного поиска -->
+                
                 <div class="expand-search-btn" id="expandSearchBtnMain" style="display:none;">
-                    <button class="expand-search-btn__button">🔍 Шукати у радіусі 20 км</button>
+                    <button class="expand-search-btn__button">🔍 Шукати у радіусі 20 км
+                        <span>🔍У радiусi 20 км</span>
+                    </button>
                 </div>
+
+                <button class="my-location-btn" id="myLocationBtn" style="display:none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"/>
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="2" x2="12" y2="4"/>
+                        <line x1="12" y1="20" x2="12" y2="22"/>
+                        <line x1="2" y1="12" x2="4" y2="12"/>
+                        <line x1="20" y1="12" x2="22" y2="12"/>
+                    </svg>
+                </button>
 
                 <div class="map" id="map"></div>
                 
-                <!-- Loading індикатор -->
+                
                 <div class="loading-state" id="loadingState" style="display:none;">
                     <div class="loading-spinner"></div>
                     <p id="loadingText">Завантаження...</p>
@@ -103,36 +116,36 @@
             </div>
         </div>
 
-        <!-- ===== ПОПАП МАГАЗИНУ ===== -->
+        
         <div class="popup-overlay" id="shopPopupOverlay" style="display:none;"></div>
         <div class="popup shop-popup" id="shopPopup" style="display:none;">
             <div class="popup__content">
-                <!-- Вміст генерується JavaScript (включая крестик) -->
+                
             </div>
         </div>
 
-        <!-- ===== ДІАЛОГ "МАГАЗИНІВ НЕМАЄ" ===== -->
+        
         <div class="popup-overlay" id="noShopsOverlay" style="display:none;"></div>
         <div class="popup no-shops-dialog" id="noShopsDialog" style="display:none;">
-            <!-- Вміст генерується JavaScript -->
+            
         </div>
 
-        <!-- ===== TOAST повідомлення ===== -->
+        
         <div id="toastContainer" class="toast-container"></div>
     </div>
 
-    <!-- ===== СКРИПТИ ===== -->
     
-    <!-- jQuery (required for Select2) -->
+    
+    
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     
-    <!-- Leaflet JS -->
+    
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
-    <!-- Select2 JS -->
+    
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     
-    <!-- Наші скрипти (у правильному порядку!) -->
+    
     <script src="js/crypto.js"></script>
     <script src="js/dataManager.js"></script>
     <script src="js/geolocation.js"></script>
