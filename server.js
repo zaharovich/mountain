@@ -237,26 +237,83 @@ app.post('/api/location-request', (req, res) => {
 });
 
 /**
- * POST /api/telegram/notify
- * Webhook для Telegram повідомлень
+ * POST /api/send-partner-request
+ * Відправка запиту на партнерство в Telegram
  */
-app.post('/api/telegram/notify', (req, res) => {
+app.post('/api/send-partner-request', async (req, res) => {
     try {
-        const { latitude, longitude, feedback } = req.body;
+        const { latitude, longitude } = req.body;
 
-        console.log('[TELEGRAM NOTIFY]');
-        console.log(`  Coords: ${latitude}, ${longitude}`);
-        console.log(`  Message: ${feedback}`);
+        if (!latitude || !longitude) {
+            return res.status(400).json({
+                success: false,
+                message: 'Координати не надано'
+            });
+        }
 
-        // Тут була б логіка відправки в Telegram
-        // const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
-        // const chatId = process.env.TELEGRAM_CHAT_ID;
-        // const message = `Новий запит про магазин:\nКоординати: ${latitude}, ${longitude}\n${feedback}`;
+        const telegramToken = process.env.TELEGRAM_BOT_TOKEN || '5674730866:AAGER4TXhXndbTTbca7BPw8L27tph9KWgSE';
+        const chatId = process.env.TELEGRAM_CHAT_ID || '-866954983';
+        
+        const googleMapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        
+        const message = `🚨 ЗАПИТ НА ПАРТНЕРСТВО
 
-        res.json({ success: true });
+Клієнт шукав солодощі але нічого не було неподалік
+
+📍 Координати:
+${latitude}, ${longitude}
+
+🗺 Google Maps:
+${googleMapsUrl}
+
+⏰ ${new Date().toLocaleString('uk-UA')}`;
+
+        const telegramUrl = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
+        
+        const https = require('https');
+        const url = require('url');
+        
+        const params = new URLSearchParams({
+            chat_id: chatId,
+            text: message,
+            parse_mode: 'HTML'
+        });
+        
+        const fullUrl = `${telegramUrl}?${params.toString()}`;
+        
+        https.get(fullUrl, (telegramRes) => {
+            let data = '';
+            
+            telegramRes.on('data', (chunk) => {
+                data += chunk;
+            });
+            
+            telegramRes.on('end', () => {
+                console.log('[TELEGRAM] Повідомлення відправлено:', {
+                    latitude,
+                    longitude,
+                    googleMapsUrl
+                });
+                
+                res.json({
+                    success: true,
+                    message: 'Запит успішно відправлено'
+                });
+            });
+        }).on('error', (error) => {
+            console.error('[TELEGRAM ERROR]', error);
+            res.status(500).json({
+                success: false,
+                message: 'Помилка відправки в Telegram'
+            });
+        });
+        
     } catch (error) {
         console.error('[ERROR]', error);
-        res.status(500).json({ success: false });
+        res.status(500).json({
+            success: false,
+            message: 'Помилка сервера'
+        });
     }
 });
 
